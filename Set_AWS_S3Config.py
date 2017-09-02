@@ -18,6 +18,21 @@ def get_regions(profile):
     for region in regions['Regions']:
         region_list.append(region['RegionName'])
 
-def put_config(profile, region):
+def put_config(rule_name, profile, region):
     config = boto3.client('config', profile_name=profile, region_name=region)
-    rule = config.put_config_rule()
+    rule = config.put_config_rule(
+        ConfigRule={
+            'ConfigRuleName': rule_name,
+            'Scope': {
+                'ComplianceResourceTypes': [
+                    'AWS::S3::BUCKET'
+                ]
+            },
+            'Source': {
+                'Owner': 'AWS',
+                'SourceIdentifier': rule_name
+            }
+        }
+    )
+
+def 
