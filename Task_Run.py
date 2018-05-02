@@ -74,7 +74,7 @@ def create_task():
                     },
                     {
                         'name': 'REMOTE_STORE_URL',
-                        'value': 'https://param-store.na.preprod.sageone.biz/params'
+                        'value': 'https://param-store.{}.preprod.sageone.biz/params'.format(landscape)
                     },
                     {
                         'name': 'SINGLE_KEY_MODE',
@@ -100,7 +100,7 @@ def create_task():
                     }
                 }
             }
-        ],
+        ]
     )
 
 if __name__ == "__main__":
