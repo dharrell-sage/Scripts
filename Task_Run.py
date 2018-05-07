@@ -39,7 +39,7 @@ def create_task():
         memory='1024',
         containerDefinitions=[
             {
-                'name': "-".join([application, "migrate"]),
+                'name': "-".join([application, "migrate"]), #TODO remove join "migrate"... uneeded 
                 'image': image_url,
                 'cpu': 300,
                 'memoryReservation': 800,
@@ -74,7 +74,7 @@ def create_task():
                     },
                     {
                         'name': 'REMOTE_STORE_URL',
-                        'value': 'https://param-store.{}.preprod.sageone.biz/params'.format(landscape)
+                        'value': 'https://param-store.{}.{}.sageone.biz/params'.format(landscape,environment)
                     },
                     {
                         'name': 'SINGLE_KEY_MODE',
