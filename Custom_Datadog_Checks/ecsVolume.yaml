@@ -1,0 +1,7 @@
+init_config:
+  metric_prefix: ecsVolume
+  docker_path: /usr/bin/docker
+  curl_path: /usr/bin/curl
+
+instances:
+    [{}]
