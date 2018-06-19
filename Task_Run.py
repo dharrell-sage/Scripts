@@ -99,9 +99,11 @@ def build_task_definition_object(ecsClient,config,taskArn):
     for envVar in task_object['containerDefinitions']['environment']:
         if envVar['name'] == "VERSION":
             envVar['value'] = config['param_version']
+        if envVar['name'] == "PARAM_VERSION":
+            envVar['value'] = config['param_version']
 
-    if "stipe" in config['product']:
-        task_object['containerDefinitions']['command'] = "bundle exec rake db:migrate"
+    if "stripe" in config['product']:
+        task_object['containerDefinitions']['command'] = ["bundle exec rake db:migrate"]
 
     task_object['containerDefinitions']['image'] = config['image_url']
     task_object['containerDefinitions']['logConfiguration']['options']['awslogs-group'] = config['migration_log']
