@@ -7,15 +7,19 @@ from subprocess import check_output
 class ecsVolume(AgentCheck):
     def check(self, instance):
       metric_prefix = self.init_config.get('metric_prefix', 'ecsVolume')
-      ecsSpaceAvailable = self.get_docker_volume_info()
+      EcsStats = self.get_docker_volume_info()
       instanceTags = self.get_instance_info()
-      self.gauge('{}.ecsVolumeAvailable'.format(metric_prefix), ecsSpaceAvailable, tags=instanceTags)
+      self.gauge('{}.ecsVolumeAvailable'.format(metric_prefix), EcsStats['EcsVA'], tags=instanceTags)
+      self.gauge('{}.ecsVolumeTotal'.format(metric_prefix), EcsStats['EcsVT'], tags=instanceTags)
+      self.gauge('{}.ecsVolumeUsed'.format(metric_prefix), EcsStats['EcsVU'], tags=instanceTags)
 
     def get_docker_volume_info(self):
       docker_path = self.init_config.get('docker_path', '/usr/bin/docker')
       docker_output = dict(json.loads(check_output(["sudo", docker_path, "info", "--format", "{{json .DriverStatus}}"])))
+      ecsVolumeUsed = ecsVolume.parseSize(docker_output['Data Space Used'])
+      ecsVolumeTotal = ecsVolume.parseSize(docker_output['Data Space Total'])
       ecsVolumeAvail = ecsVolume.parseSize(docker_output['Data Space Available'])
-      return ecsVolumeAvail
+      return {'EcsVA': ecsVolumeAvail, 'EcsVT': ecsVolumeTotal, 'EcsVU': ecsVolumeUsed}
 
     def get_instance_info(self):
       curl_path = self.init_config.get('curl_path', '/usr/bin/curl')
@@ -29,7 +33,7 @@ class ecsVolume(AgentCheck):
     @staticmethod
     def parseSize(size):
       sizeSpaced = size[:-2] + " " + size[-2:]
-      units = {"B": 1, "KB": 2**10, "MB": 2**20, "GB": 2**30, "TB": 2**40}
+      units = {"B": 1, "KB": 10**3, "MB": 10**6, "GB": 10**9, "TB": 10**12}
       number, unit = [string.strip() for string in sizeSpaced.split()]
       return int(float(number)*units[unit])
 

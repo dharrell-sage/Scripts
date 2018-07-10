@@ -97,9 +97,7 @@ def build_task_definition_object(ecsClient,config,taskArn):
             task_object['containerDefinitions'] = containers
 
     for envVar in task_object['containerDefinitions']['environment']:
-        if envVar['name'] == "VERSION":
-            envVar['value'] = config['param_version']
-        if envVar['name'] == "PARAM_VERSION":
+        if envVar['name'] in ['VERSION', 'PARAM_VERSION']:
             envVar['value'] = config['param_version']
 
     if "stripe" in config['product']:
