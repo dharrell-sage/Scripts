@@ -3,6 +3,7 @@
 import argparse
 import boto3
 import time
+import logging
 
 
 
@@ -22,10 +23,13 @@ def parse_config():
     parser.add_argument('LANDSCAPE', metavar='[LANDSCAPE]', help='Location name of the APP?')
     parser.add_argument('ENVIRONMENT', metavar='[ENVIRONMENT]', help='Is this pre-prod or prod?')
     parser.add_argument('PRODUCT', metavar='[PRODUCT]', help='Name of the application?')
+    parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument('--REGION', metavar='[REGION]', help='AWS region where this task will be run?')
     parser.add_argument('--IMAGE_VERSION', metavar='[IMAGE_VERSION]', help='Docker Image version? To be prefixed with "v."')
     parser.add_argument('--PARAM_VERSION', metavar='[PARAM_VERSION]', help='Verion of parameters? To be prefixed with "v."')
     args = parser.parse_args()
+    if args.verbose:
+        logging.basicConfig(level=logging.DEBUG)
 
     config = {}
 
@@ -63,16 +67,15 @@ def get_service_arn(ecsClient,config,token=''):
     )
 
     for service in response['serviceArns']:
-#        print service
+        print service
         if config['silver_square'] in service:
 #            print service
             return service
-        else:
-            try:
-                pageToken = response['nextToken']
-                get_service_arn(ecsClient,config,token=pageToken)
-            except KeyError:
-                pass
+    try:
+        pageToken = response['nextToken']
+        return get_service_arn(ecsClient,config,token=pageToken)
+    except KeyError:
+        pass
 
 def get_task_definition_arn(ecsClient,config,serviceArn):
     response = ecsClient.describe_services(
