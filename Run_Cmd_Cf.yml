@@ -1,0 +1,42 @@
+AWSTemplateFormatVersion:  "2010-09-09"
+Description: "Creates the Autoscaling Group launch configuration"
+Parameters:
+  DataDogKey:
+    Description: "DataDog API Key"
+    Type: String
+Resources:  
+  Document:
+    Type: AWS::SSM::Document
+    Properties:
+      Content: !Sub |
+        schemaVersion: '2.2'
+        description: Install Datadog Agent
+        parameters:
+          DatadogAPIKey:
+            type: String
+            default: !Ref DataDogKey
+            description: "The datadog API Key"
+        mainSteps:
+        - action: aws:runShellScript
+          name: datadogInstaller
+          inputs:
+            runCommand:
+            - #!/bin/bash
+            - echo \"Installing Datadog Agent\"
+            - if [ ! -f /etc/yum.repos.d/datadog.repo ]; then
+            -   cat <<SOURCE > /etc/yum.repos.d/datadog.repo
+            - [datadog]
+            - name = Datadog, Inc.
+            - baseurl = http://yum.datadoghq.com/rpm/x86_64/
+            - enabled=0
+            - gpgcheck=0
+            - SOURCE
+            -   yum --enablerepo=datadog -y install datadog-agent
+            - sed -i '/  - use_mount: no/a \\    excluded_mountpoint_re:\\n        - /var/lib/docker/*\\n        - /var/run/docker/*' /etc/dd-agent/conf.d/disk.yaml.default
+            - fi
+            - sed -i \"/# collector_log_file:/ s/# *//\" /etc/dd-agent/datadog.conf
+            - sed -i \"/# forwarder_log_file:/ s/# *//\" /etc/dd-agent/datadog.conf
+            - sed -i \"/# dogstatsd_log_file:/ s/# *//\" /etc/dd-agent/datadog.conf
+            - sed -i \"/# additional_checksd:/ s/# *//\" /etc/dd-agent/datadog.conf
+            - chkconfig datadog-agent on
+            - /etc/init.d/datadog-agent start
