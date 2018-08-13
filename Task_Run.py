@@ -25,14 +25,16 @@ def parse_config():
     parser.add_argument('PRODUCT', metavar='[PRODUCT]', help='Name of the application?')
     parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
     parser.add_argument('--REGION', metavar='[REGION]', help='AWS region where this task will be run?')
-    parser.add_argument('--IMAGE_VERSION', metavar='[IMAGE_VERSION]', help='Docker Image version? To be prefixed with "v."')
-    parser.add_argument('--PARAM_VERSION', metavar='[PARAM_VERSION]', help='Verion of parameters? To be prefixed with "v."')
+    parser.add_argument('--IMAGE_VERSION', metavar='[IMAGE_VERSION]', help='Docker Image version? To be prefixed with "v"')
+    parser.add_argument('--PARAM_VERSION', metavar='[PARAM_VERSION]', help='Verion of parameters? To be prefixed with "v"')
+    parser.add_argument('--RAKE', metavar='[RAKE]', help='Full rake command encapsulated with double quotes')
     args = parser.parse_args()
     if args.verbose:
         logging.basicConfig(level=logging.DEBUG)
 
     config = {}
 
+    config['rake'] = args.RAKE.lower()
     config['family'] = args.FAMILY.lower()
     config['landscape'] = args.LANDSCAPE.lower()
     config['environment'] = args.ENVIRONMENT.lower()
@@ -67,9 +69,9 @@ def get_service_arn(ecsClient,config,token=''):
     )
 
     for service in response['serviceArns']:
-        print service
+        #print service
         if config['silver_square'] in service:
-#            print service
+            #print service
             return service
     try:
         pageToken = response['nextToken']
@@ -104,12 +106,12 @@ def build_task_definition_object(ecsClient,config,taskArn):
             envVar['value'] = config['param_version']
 
     if "stripe" in config['product']:
-        task_object['containerDefinitions']['command'] = ["bundle exec rake db:migrate"]
+        task_object['containerDefinitions']['command'] = [config['rake']]
 
     task_object['containerDefinitions']['image'] = config['image_url']
     task_object['containerDefinitions']['logConfiguration']['options']['awslogs-group'] = config['migration_log']
 
-    #print task_object
+    print task_object
     return task_object
 
 # Need to create a task before you can run it. :)
