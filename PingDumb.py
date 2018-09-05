@@ -22,7 +22,7 @@ def test_url(address):
 
 def trigger_incident(URL,statusCode):
 
-    API_KEY = 'WFei-spcyok2DeyPad2y'
+    API_KEY = 'Secret'
     SERVICE_ID = 'PSF4JHY'
     FROM = 'dustin.harrell@sage.com'
 
