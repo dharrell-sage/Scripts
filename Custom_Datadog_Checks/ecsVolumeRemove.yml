@@ -1,0 +1,10 @@
+schemaVersion: "2.2"
+description: "Install Datadog Agent"
+mainSteps:
+- action: aws:runShellScript
+  name: "ecsVolumeDatadogMonitor"
+  inputs:
+    runCommand:
+    - "#!/bin/bash"
+    - "rm /etc/dd-agent/checks.d/ecsVolume.py"
+    - "rm /etc/dd-agent/conf.d/ecsVolume.yaml"
