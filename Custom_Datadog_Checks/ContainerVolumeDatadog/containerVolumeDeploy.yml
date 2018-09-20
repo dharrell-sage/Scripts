@@ -75,7 +75,7 @@ mainSteps:
         - "            v['size'] = h[1]"
         - "            v['used'] = h[2]"
         - "            v['avail'] = h[3]"
-        - "            v['id'] = h[5].split("/")[-1]"
+        - "            v['id'] = h[5].split(\"/\")[-1]"
         - "            hostVolumeData[v['id']] = v"
         
         - "        finalForm = {}"
