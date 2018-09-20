@@ -1,0 +1,14 @@
+init_config:
+  metric_prefix: containerVolume
+  docker_path: /usr/bin/docker
+  curl_path: /usr/bin/curl
+  df_path: /bin/df
+
+instances:
+    [{}]
+
+logs:
+  - type: file
+    path: /var/log/datadog/containerVolume.log
+    service: containerVolume
+    source: python
