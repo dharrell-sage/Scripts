@@ -34,7 +34,7 @@ def parse_config():
 
     config = {}
 
-    config['rake'] = args.RAKE.lower()
+    config['rake'] = args.RAKE
     config['family'] = args.FAMILY.lower()
     config['landscape'] = args.LANDSCAPE.lower()
     config['environment'] = args.ENVIRONMENT.lower()
