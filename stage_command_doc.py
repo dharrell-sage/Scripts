@@ -16,10 +16,10 @@ def entry():
 
 def parse_config():
     parser = argparse.ArgumentParser(description='Command line arguments')
-    parser.add_argument('ACTION', metavar='[ACTION]', choices=['Update', 'Create'], help='Action to be taken')
-    parser.add_argument('TYPE', metavar='[TYPE]', choices=['Command', 'Policy', 'Automation'], help='Type of document to be uploaded')
-    parser.add_argument('FORMAT', metavar='[FORMAT]', choices=['YAML','JSON'], help='Location/Name of the Script')
-    parser.add_argument('FILE', metavar='[FILE]', help='Location/Name of the Script')
+    parser.add_argument('ACTION', metavar='[ACTION]', choices=['Update', 'Create'], help='Action to be taken [Update/Create]')
+    parser.add_argument('TYPE', metavar='[TYPE]', choices=['Command', 'Policy', 'Automation'], help='Type of document to be uploaded [Command/Policy/Automation]')
+    parser.add_argument('FORMAT', metavar='[FORMAT]', choices=['YAML','JSON'], help='Target file format type [YAML/JSON]')
+    parser.add_argument('FILE', metavar='[FILE]', help='Location/Name of the Script [FILEPATH]')
     parser.add_argument('--REGION', metavar='[REGION]', help='AWS region where this document will or does reside')
     parser.add_argument("-v", "--verbose", help="increase output verbosity", action="store_true")
     args = parser.parse_args()
