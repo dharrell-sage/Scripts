@@ -3,12 +3,7 @@ init_config:
   docker_path: /usr/bin/docker
   curl_path: /usr/bin/curl
   df_path: /bin/df
+  cat_path: /bin/cat
 
 instances:
     [{}]
-
-logs:
-  - type: file
-    path: /var/log/datadog/containerVolume.log
-    service: containerVolume
-    source: python
