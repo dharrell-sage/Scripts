@@ -55,7 +55,7 @@ mainSteps:
         
         - "    def container_df(self):"
         - "        docker_path = self.init_config.get('docker_path', '/usr/bin/docker')"
-        - "        containerData = check_output([\"sudo\", docker_path, \"container\", \"ls\", \"--format\", \"{{json .ID}}\"]).replace('\"',\"\").split(\"\n\")"
+        - "        containerData = check_output([\"sudo\", docker_path, \"container\", \"ls\", \"--format\", \"{{json .ID}}\"]).replace('\"',\"\").split(\"\\n\")"
         - "        containerJson = {}"
         - "        for id in containerData[:-1]:"
         - "            containerJson[id] = json.loads(check_output([\"sudo\", docker_path, \"inspect\", \"--format\", \"{{json .}}\", id]))"
@@ -63,7 +63,7 @@ mainSteps:
         - "        hostDfStats = []"
         - "        df_path = self.init_config.get('df_path', '/bin/df')"
         - "        hostDf = check_output([\"sudo\", df_path])"
-        - "        for line in hostDf.split(\"\n\"):"
+        - "        for line in hostDf.split(\"\\n\"):"
         - "            if \"devicemapper\" in line:"
         - "                hostDfStats.append(line)"
         

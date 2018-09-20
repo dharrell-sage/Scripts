@@ -1,0 +1,10 @@
+schemaVersion: "2.2"
+description: "Install Datadog Agent"
+mainSteps:
+- action: aws:runShellScript
+  name: "containerVolumeDatadogMonitorRemover"
+  inputs:
+    runCommand:
+    - "#!/bin/bash"
+    - "rm /etc/dd-agent/checks.d/containerVolume.py"
+    - "rm /etc/dd-agent/conf.d/containerVolume.yaml"
