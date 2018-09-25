@@ -1,0 +1,13 @@
+schemaVersion: "2.2"
+description: "Installs Datadog and custom datadog metrics for EBS and Container Volumes"
+parameters:
+  DatadogAPIKey:
+    type: String
+    description: "The datadog API Key"
+mainSteps:
+- action: aws:runShellScript
+  name: "FullDatadogInstallCustom"
+  inputs:
+    runCommand:
+        - "#!/bin/bash"
+        - "service datadog-agent restart"
