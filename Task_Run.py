@@ -105,7 +105,7 @@ def build_task_definition_object(ecsClient,config,taskArn):
         if envVar['name'] in ['VERSION', 'PARAM_VERSION']:
             envVar['value'] = config['param_version']
 
-    if "stripe" in config['product']:
+    if "stripe" or "central" in config['product']:
         task_object['containerDefinitions']['command'] = [config['rake']]
 
     task_object['containerDefinitions']['image'] = config['image_url']
