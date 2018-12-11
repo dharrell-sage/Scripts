@@ -3,6 +3,7 @@
 import argparse
 import boto3
 import logging
+import sys
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -39,8 +40,14 @@ def parse_config():
 # Assumption: Console Deactivation needed for all users passed into this script.
 def deactive_console(config):
     for user in config:
-        response = iam_client.delete_login_profile(UserName=user)
-        logger.info("The password for {user} has been disabled".format(user=user))
+        try:
+            response = iam_client.delete_login_profile(UserName=user)
+            logger.info("The password for {user} has been disabled".format(user=user))
+        except:
+            e = sys.exc_info()[0]
+            logger.error(e)
+            logger.error("{user} login profile could not be deleted".format(user=user))
+            pass
 
 # Assumption: All users that have Access Keys should have them disabled.
 def get_access_keys(config):
@@ -65,9 +72,12 @@ def disable_access_keys(key_object):
                 AccessKeyId=object['access_key'],
                 Status='Inactive'
             )
-            logger.info("{user}: {access_key}".format(user=object['user'], access_key=['access_key']))
+            logger.info("{user}: {access_key} successfully deactivated".format(user=object['user'], access_key=object['access_key']))
         except:
-            logger.info("Key deactivation failed for {user}: {access_key}").format(user=object['user'], access_key=['access_key'])
+            e = sys.exc_info()[0]
+            logger.error(e)
+            logger.error("Key deactivation failed for {user}: {access_key}").format(user=object['user'], access_key=object['access_key'])
+            pass
 
 if __name__ == "__main__":
     main()
