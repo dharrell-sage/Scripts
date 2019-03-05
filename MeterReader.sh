@@ -3,7 +3,7 @@
 # Author: Dustin Harrell
 # Version: v1.0.0
 
-usage=$(cat <<EOF
+usage=$(cat <<EOFq
 MeterReader.sh [Region] [Landscape] [Environment] [Application] [Version]... [--help]
 ---
         Example: MeterReader.sh STRING STRING STRING STRING STRING
@@ -27,7 +27,7 @@ elif [ -z $2 ] || [ -z $3 ] || [ -z $4 ] || [ -z $5 ]
 fi
 
 get_params () {
-aws --region=$1 ssm get-parameters --names $2.$3.$4.$5 --with-decryption | awk {'print $4'} | base64 --decode | gunzip -9 | python -m json.tool
+aws --region=$1 ssm get-parameters --names $2.$3.$4.$5 --with-decryption --output json | jq ". base64 --decode | gunzip -9 | python -m json.tool
 }
 
 get_params $1 $2 $3 $4 $5
